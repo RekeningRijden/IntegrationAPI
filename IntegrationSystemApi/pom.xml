@@ -6,7 +6,7 @@
 
 
     <groupId>com.edr</groupId>
-    <artifactId>IntegrationApi</artifactId>
+    <artifactId>IntegrationSystemApi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
