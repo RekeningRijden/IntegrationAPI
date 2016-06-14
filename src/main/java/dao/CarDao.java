@@ -19,7 +19,7 @@ public abstract class CarDao extends AbstractDao<Car> {
      * @param carIdentifier to look for.
      * @return a Car object.
      */
-    public Car getCarByIdentifierId(String carIdentifier) {
+    public Car getCarByIdentifier(String carIdentifier) {
         TypedQuery<Car> q = getEntityManager().createQuery("SELECT c FROM Car c WHERE c.carIdentifier = :carIdentifier", Car.class)
                 .setParameter("carIdentifier", carIdentifier);
 
