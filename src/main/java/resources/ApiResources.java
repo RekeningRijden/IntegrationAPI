@@ -85,6 +85,7 @@ public class ApiResources {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Position> getPositions(@QueryParam("api_key") String apiKey) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
+            //TODO
             return new ArrayList<>();
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
@@ -109,7 +110,7 @@ public class ApiResources {
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
             }else{
-                throw new WebApplicationException(422);
+                throw new WebApplicationException("Unprocessable Entity", 422);
             }
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
@@ -133,7 +134,7 @@ public class ApiResources {
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
             }else{
-                throw new WebApplicationException(422);
+                throw new WebApplicationException("Unprocessable Entity", 422);
             }
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
