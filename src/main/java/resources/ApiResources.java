@@ -110,7 +110,7 @@ public class ApiResources {
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
             }else{
-                throw new WebApplicationException("Unprocessable Entity", 422);
+                throw new WebApplicationException(Response.Status.CONFLICT);
             }
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
@@ -134,7 +134,7 @@ public class ApiResources {
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
             }else{
-                throw new WebApplicationException("Unprocessable Entity", 422);
+                throw new WebApplicationException(Response.Status.CONFLICT);
             }
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
