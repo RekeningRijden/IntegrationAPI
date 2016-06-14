@@ -68,6 +68,7 @@ public class ApiResources {
                 c.setPositions(movementsRequest.getPositions());
                 carService.create(c);
             }
+            throw new WebApplicationException(Response.Status.OK);
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
@@ -83,7 +84,11 @@ public class ApiResources {
     @Path("/positions/_random")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Position> getPositions(@QueryParam("api_key") String apiKey) {
-        return new ArrayList<>();
+        if (apiKeyService.getApiKeyByKey(apiKey) != null) {
+            return new ArrayList<>();
+        } else {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
     }
 
     /**
@@ -97,10 +102,17 @@ public class ApiResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, StolenRequest stolenRequest) {
-        Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
-        if (car != null) {
-            car.setStolen(true);
-            carService.update(car);
+        if (apiKeyService.getApiKeyByKey(apiKey) != null) {
+            Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
+            if (car != null) {
+                car.setStolen(true);
+                carService.update(car);
+                throw new WebApplicationException(Response.Status.OK);
+            }else{
+                throw new WebApplicationException(422);
+            }
+        } else {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
     }
 
@@ -114,10 +126,17 @@ public class ApiResources {
     @Path("/stolen")
     @Produces(MediaType.APPLICATION_JSON)
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest stolenRequest) {
-        Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
-        if (car != null) {
-            car.setStolen(false);
-            carService.update(car);
+        if (apiKeyService.getApiKeyByKey(apiKey) != null) {
+            Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
+            if (car != null) {
+                car.setStolen(false);
+                carService.update(car);
+                throw new WebApplicationException(Response.Status.OK);
+            }else{
+                throw new WebApplicationException(422);
+            }
+        } else {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
     }
 
