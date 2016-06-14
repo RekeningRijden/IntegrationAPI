@@ -99,9 +99,10 @@ public abstract class AbstractDao<T> {
 
     /**
      * Get a paginated list of items.
+     *
      * @param pageIndex
      * @param pageSize
-     * @return 
+     * @return
      */
     public List<T> getAllPaginated(int pageIndex, int pageSize) {
         CriteriaBuilder qb = entityManager.getCriteriaBuilder();
@@ -122,5 +123,16 @@ public abstract class AbstractDao<T> {
      */
     protected String makeFieldNameJqplSafe(String fieldName) {
         return fieldName.replaceAll("[^0-9a-zA-Z_\\.]", "");
+    }
+
+    /**
+     * @param q the TypedQuery to get the result from.
+     * @return one result from a executed TypedQuery. This method avoids
+     * possible NoResultExceptions being thrown.
+     */
+    protected T oneResult(TypedQuery<T> q) {
+        q.setMaxResults(1);
+        return q.getResultList().isEmpty()
+                ? null : q.getResultList().get(0);
     }
 }
