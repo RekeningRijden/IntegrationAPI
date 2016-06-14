@@ -30,6 +30,13 @@ public class ApiKey implements Serializable {
     public ApiKey() {
     }
 
+    public ApiKey(String country, String apiKey) {
+        this.country = country;
+        this.apiKey = apiKey;
+    }
+    
+    
+
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
         public Long getId() {
         return id;
