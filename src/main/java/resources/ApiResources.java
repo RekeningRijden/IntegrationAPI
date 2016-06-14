@@ -3,7 +3,9 @@ package resources;
 import domain.Car;
 import domain.Position;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -51,7 +53,7 @@ public class ApiResources {
                     carService.create(carService.movementRequestToCar(movementsRequest));
                 }
                 throw new WebApplicationException(Response.Status.OK);
-            }else{
+            } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);
             }
         } else {
@@ -71,7 +73,12 @@ public class ApiResources {
     public List<Position> getPositions(@QueryParam("api_key") String apiKey) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             //TODO
-            return new ArrayList<>();
+            List<Position> positions = new ArrayList<>();
+            Random r = new Random();
+            for (int i = 0; i < r.nextInt(100) + 5; i++) {
+                positions.add(new Position(new Date(), (r.nextDouble() * -360.0) + 180, (r.nextDouble() * -180.0) + 90));
+            }
+            return positions;
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }

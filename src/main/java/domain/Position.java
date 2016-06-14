@@ -21,6 +21,12 @@ public class Position implements Serializable{
     public Position() {
     }
 
+    public Position(Date date, Double longitude, Double latitude) {
+        this.date = date;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public Date getDate() {
         return date;
     }
