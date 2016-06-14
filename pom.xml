@@ -6,11 +6,11 @@
 
 
     <groupId>com.edr</groupId>
-    <artifactId>IntegrationSystemApi</artifactId>
+    <artifactId>IntegrationApi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>IntegrationSystemApi</name>
+    <name>IntegrationApi</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
