@@ -16,7 +16,9 @@ import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import request.DeleteStolenRequest;
 import request.MovementsRequest;
+import request.StolenRequest;
 import service.ApiKeyService;
 import service.CarService;
 
@@ -88,28 +90,35 @@ public class ApiResources {
      * Set a car as stolen
      *
      * @param apiKey key for access
-     * @param car which is stolen
+     * @param stolenRequest
      */
     @POST
     @Path("/stolen")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void setCarAsStolen(@QueryParam("api_key") String apiKey, Car car) {
-        car.setStolen(true);
+    public void setCarAsStolen(@QueryParam("api_key") String apiKey, StolenRequest stolenRequest) {
+        Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
+        if (car != null) {
+            car.setStolen(true);
+            carService.update(car);
+        }
     }
 
     /**
      * Set car as unstolen
      *
      * @param apiKey key for access
-     * @param carIdentifier the identifier of the car
+     * @param stolenRequest
      */
     @DELETE
     @Path("/stolen")
     @Produces(MediaType.APPLICATION_JSON)
-    public void setCarAsStolen(@QueryParam("api_key") String apiKey, @QueryParam("carIdentifier") String carIdentifier) {
-        Car car = carService.getCarByIdentifier(carIdentifier);
-        car.setStolen(false);
+    public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest stolenRequest) {
+        Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
+        if (car != null) {
+            car.setStolen(false);
+            carService.update(car);
+        }
     }
 
 }
