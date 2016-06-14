@@ -16,10 +16,11 @@ import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import request.MovementsRequest;
 import service.ApiKeyService;
 import service.CarService;
 
-@Path("/api")
+@Path("/")
 @Named
 public class ApiResources {
 
@@ -30,31 +31,49 @@ public class ApiResources {
 
     /**
      * update a car
+     *
      * @param apiKey key for access
-     * @param car to update
+     * @param movementsRequest
      */
     @POST
     @Path("/movements")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateCar(@QueryParam("api_key") String apiKey, Car car) {
+    public void updateCar(@QueryParam("api_key") String apiKey, MovementsRequest movementsRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
-            if (carService.getCarByIdentifier(car.getCarIdentifier()) != null) {
-                Car c = carService.getCarByIdentifier(car.getCarIdentifier());
-                c.setDriver(car.getDriver());
-                c.setDriverAddress(car.getDriverAddress());
-                c.setPositions(car.getPositions());
+            if (carService.getCarByIdentifier(movementsRequest.getCarIdentifier()) != null) {
+                Car c = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
+                c.getDriver().setFirstName(movementsRequest.getDriver().getFirstName());
+                c.getDriver().setLastName(movementsRequest.getDriver().getLastName());
+                c.getDriverAddress().setCity(movementsRequest.getDriverAddress().getCity());
+                c.getDriverAddress().setCountry(movementsRequest.getDriverAddress().getCountry());
+                c.getDriverAddress().setStreet(movementsRequest.getDriverAddress().getStreet());
+                c.getDriverAddress().setStreetNr(movementsRequest.getDriverAddress().getStreetNr());
+                c.getDriverAddress().setZipcode(movementsRequest.getDriverAddress().getZipcode());
+                c.setPositions(movementsRequest.getPositions());
                 carService.update(c);
             } else {
-                carService.create(car);
+                Car c = new Car();
+                c.setCarIdentifier(movementsRequest.getCarIdentifier());
+                c.setLicencePlate(movementsRequest.getLicencePlate());
+                c.getDriver().setFirstName(movementsRequest.getDriver().getFirstName());
+                c.getDriver().setLastName(movementsRequest.getDriver().getLastName());
+                c.getDriverAddress().setCity(movementsRequest.getDriverAddress().getCity());
+                c.getDriverAddress().setCountry(movementsRequest.getDriverAddress().getCountry());
+                c.getDriverAddress().setStreet(movementsRequest.getDriverAddress().getStreet());
+                c.getDriverAddress().setStreetNr(movementsRequest.getDriverAddress().getStreetNr());
+                c.getDriverAddress().setZipcode(movementsRequest.getDriverAddress().getZipcode());
+                c.setPositions(movementsRequest.getPositions());
+                carService.create(c);
             }
-        }else{
+        } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
     }
-    
+
     /**
      * Gets random positions
+     *
      * @param apiKey key for access
      * @return list of positions
      */
@@ -64,9 +83,10 @@ public class ApiResources {
     public List<Position> getPositions(@QueryParam("api_key") String apiKey) {
         return new ArrayList<>();
     }
-    
+
     /**
      * Set a car as stolen
+     *
      * @param apiKey key for access
      * @param car which is stolen
      */
@@ -77,9 +97,10 @@ public class ApiResources {
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, Car car) {
         car.setStolen(true);
     }
-    
+
     /**
      * Set car as unstolen
+     *
      * @param apiKey key for access
      * @param carIdentifier the identifier of the car
      */
