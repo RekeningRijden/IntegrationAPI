@@ -39,36 +39,21 @@ public class ApiResources {
      */
     @POST
     @Path("/movements")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateCar(@QueryParam("api_key") String apiKey, MovementsRequest movementsRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
-            if (carService.getCarByIdentifier(movementsRequest.getCarIdentifier()) != null) {
-                Car c = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
-                c.getDriver().setFirstName(movementsRequest.getDriver().getFirstName());
-                c.getDriver().setLastName(movementsRequest.getDriver().getLastName());
-                c.getDriverAddress().setCity(movementsRequest.getDriverAddress().getCity());
-                c.getDriverAddress().setCountry(movementsRequest.getDriverAddress().getCountry());
-                c.getDriverAddress().setStreet(movementsRequest.getDriverAddress().getStreet());
-                c.getDriverAddress().setStreetNr(movementsRequest.getDriverAddress().getStreetNr());
-                c.getDriverAddress().setZipcode(movementsRequest.getDriverAddress().getZipcode());
-                c.setPositions(movementsRequest.getPositions());
-                carService.update(c);
-            } else {
-                Car c = new Car();
-                c.setCarIdentifier(movementsRequest.getCarIdentifier());
-                c.setLicencePlate(movementsRequest.getLicencePlate());
-                c.getDriver().setFirstName(movementsRequest.getDriver().getFirstName());
-                c.getDriver().setLastName(movementsRequest.getDriver().getLastName());
-                c.getDriverAddress().setCity(movementsRequest.getDriverAddress().getCity());
-                c.getDriverAddress().setCountry(movementsRequest.getDriverAddress().getCountry());
-                c.getDriverAddress().setStreet(movementsRequest.getDriverAddress().getStreet());
-                c.getDriverAddress().setStreetNr(movementsRequest.getDriverAddress().getStreetNr());
-                c.getDriverAddress().setZipcode(movementsRequest.getDriverAddress().getZipcode());
-                c.setPositions(movementsRequest.getPositions());
-                carService.create(c);
+            if (movementsRequest.getCarIdentifier() != null && !movementsRequest.getCarIdentifier().equals("")) {
+                if (carService.getCarByIdentifier(movementsRequest.getCarIdentifier()) != null) {
+                    Car c = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
+                    carService.update(carService.movementRequestToCar(movementsRequest, c));
+                } else {
+                    carService.create(carService.movementRequestToCar(movementsRequest));
+                }
+                throw new WebApplicationException(Response.Status.OK);
+            }else{
+                throw new WebApplicationException(Response.Status.CONFLICT);
             }
-            throw new WebApplicationException(Response.Status.OK);
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
@@ -100,7 +85,7 @@ public class ApiResources {
      */
     @POST
     @Path("/stolen")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, StolenRequest stolenRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
@@ -109,7 +94,7 @@ public class ApiResources {
                 car.setStolen(true);
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
-            }else{
+            } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);
             }
         } else {
@@ -125,7 +110,7 @@ public class ApiResources {
      */
     @DELETE
     @Path("/stolen")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest stolenRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
@@ -133,7 +118,7 @@ public class ApiResources {
                 car.setStolen(false);
                 carService.update(car);
                 throw new WebApplicationException(Response.Status.OK);
-            }else{
+            } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);
             }
         } else {
