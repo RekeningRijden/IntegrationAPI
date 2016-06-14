@@ -15,10 +15,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import service.ApiKeyService;
 import service.CarService;
 
-@Path("/")
+@Path("/api")
 @Named
 public class ApiResources {
 
@@ -39,12 +40,16 @@ public class ApiResources {
     public void updateCar(@QueryParam("api_key") String apiKey, Car car) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             if (carService.getCarByIdentifier(car.getCarIdentifier()) != null) {
-
+                Car c = carService.getCarByIdentifier(car.getCarIdentifier());
+                c.setDriver(car.getDriver());
+                c.setDriverAddress(car.getDriverAddress());
+                c.setPositions(car.getPositions());
+                carService.update(c);
             } else {
                 carService.create(car);
             }
         }else{
-            
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
     }
     
