@@ -92,7 +92,7 @@
                             <!-- Available backends are plaintext (default), swagger and asciidoc -->
                             <backend>swagger</backend>
                             <!-- Domain of the deployed project, defaults to example.com -->
-                            <deployedDomain>api.s63a.marijn.ws</deployedDomain>
+                            <deployedDomain>api.seclab.marijn.ws</deployedDomain>
                         </configuration>
                     </execution>
                 </executions>
