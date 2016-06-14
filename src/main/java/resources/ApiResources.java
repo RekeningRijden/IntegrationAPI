@@ -111,6 +111,7 @@ public class ApiResources {
     @DELETE
     @Path("/stolen")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    @Consumes(MediaType.APPLICATION_JSON)
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest stolenRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
