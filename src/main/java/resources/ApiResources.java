@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import service.ApiKeyService;
 import service.CarService;
 
 @Path("/")
@@ -23,6 +24,8 @@ public class ApiResources {
 
     @Inject
     private CarService carService;
+    @Inject
+    private ApiKeyService apiKeyService;
 
     /**
      * update a car
@@ -34,7 +37,7 @@ public class ApiResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateCar(@QueryParam("api_key") String apiKey, Car car) {
-        if (apiKey.equals("testKey")) {
+        if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             if (carService.getCarByIdentifier(car.getCarIdentifier()) != null) {
 
             } else {
