@@ -37,7 +37,7 @@ public class ApiResources {
      * update a car
      *
      * @param apiKey key for access
-     * @param movementsRequest
+     * @param movementsRequest a request for an invoice by the movements of a car
      */
     @POST
     @Path("/movements")
@@ -88,7 +88,7 @@ public class ApiResources {
      * Set a car as stolen
      *
      * @param apiKey key for access
-     * @param stolenRequest
+     * @param stolenRequest a request to set a car as stolen
      */
     @POST
     @Path("/stolen")
@@ -113,15 +113,15 @@ public class ApiResources {
      * Set car as unstolen
      *
      * @param apiKey key for access
-     * @param stolenRequest
+     * @param deleteStolenRequest the request to set a car unstolen
      */
     @DELETE
     @Path("/stolen")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest stolenRequest) {
+    public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest deleteStolenRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
-            Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
+            Car car = carService.getCarByIdentifier(deleteStolenRequest.getCarIdentifier());
             if (car != null) {
                 car.setStolen(false);
                 carService.update(car);
