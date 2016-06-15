@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang.math.RandomUtils;
 
 /**
  *
@@ -19,6 +20,7 @@ public class PositionHelper {
 
     /**
      * Creates a longitude in portugal
+     *
      * @return a longitude as double
      */
     public static Double createLongitude() {
@@ -37,6 +39,7 @@ public class PositionHelper {
 
     /**
      * Creates a latitude in portugal
+     *
      * @return a latitude as double
      */
     public static Double createLatitude() {
@@ -54,7 +57,18 @@ public class PositionHelper {
     }
 
     /**
+     * Create a random date
+     * @return a random date
+     */
+    public static Date createDate() {
+        Random r = new Random();
+        //Een random date van maximaal 10 dagen geleden
+        return new Date(System.currentTimeMillis() - r.nextInt(1000 * 60 * 60 * 24 * 10));
+    }
+
+    /**
      * Creates random positions in portugal
+     *
      * @return a list with random positions in portugal
      */
     public static List<Position> createPositions() {
@@ -62,7 +76,7 @@ public class PositionHelper {
 
         Random r = new Random();
         for (int i = 0; i < r.nextInt(100) + 5; i++) {
-            positions.add(new Position(new Date(), createLongitude(), createLatitude()));
+            positions.add(new Position(createDate(), createLongitude(), createLatitude()));
         }
         return positions;
     }
