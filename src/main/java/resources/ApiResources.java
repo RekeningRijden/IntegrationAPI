@@ -23,6 +23,7 @@ import request.MovementsRequest;
 import request.StolenRequest;
 import service.ApiKeyService;
 import service.CarService;
+import util.PositionHelper;
 
 @Path("/")
 @Named
@@ -37,7 +38,8 @@ public class ApiResources {
      * update a car
      *
      * @param apiKey key for access
-     * @param movementsRequest a request for an invoice by the movements of a car
+     * @param movementsRequest a request for an invoice by the movements of a
+     * car
      */
     @POST
     @Path("/movements")
@@ -74,10 +76,7 @@ public class ApiResources {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             //TODO
             List<Position> positions = new ArrayList<>();
-            Random r = new Random();
-            for (int i = 0; i < r.nextInt(100) + 5; i++) {
-                positions.add(new Position(new Date(), (r.nextDouble() * -360.0) + 180, (r.nextDouble() * -180.0) + 90));
-            }
+            positions.addAll(PositionHelper.createPositions());
             return positions;
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
