@@ -42,7 +42,7 @@ public class JMSProducer {
         //Setup routing for RabbitMQ
         for (HashMap.Entry<String, String> entry : routingKeys.entrySet()) {
             String queue = entry.getKey() + "_" + queueSuffix;
-            channel.queueDeclare(queue, false, false, false, null);
+            channel.queueDeclare(queue, true, false, false, null);
             channel.queueBind(queue, exchangeName, entry.getValue());
         }
     }
