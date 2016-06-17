@@ -2,5 +2,5 @@
 /target/
 /.idea/
 /IntegrationSystemApi/.idea/
-*.imp
+*.iml
 .DS_Store
