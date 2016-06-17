@@ -25,18 +25,18 @@ public class ApiKey implements Serializable {
     private Long id;
     
     private String country;
+    private String abbreviation;
     private String apiKey;
 
     public ApiKey() {
     }
 
-    public ApiKey(String country, String apiKey) {
+    public ApiKey(String country, String apiKey, String abbreviation) {
         this.country = country;
         this.apiKey = apiKey;
+        this.abbreviation = abbreviation;
     }
     
-    
-
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
         public Long getId() {
         return id;
@@ -62,6 +62,14 @@ public class ApiKey implements Serializable {
         this.apiKey = apiKey;
     }
     
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
 //</editor-fold>
 
 }
