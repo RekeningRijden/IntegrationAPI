@@ -14,15 +14,20 @@ public class JMSConsumer {
 
     public JMSConsumer(final String queueName, final JMSProducer producer) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("test");
-        factory.setPassword("test");
-        factory.setHost("192.168.99.100");
-        factory.setPort(5672);
+        //Lokaal in docker
+//        factory.setHost("192.168.99.100");
+//        factory.setUsername("test");
+//        factory.setPassword("test");
+
+        //Productie
+        factory.setHost("rabbitmq.seclab.marijn.ws");
+        factory.setUsername("portugal");
+        factory.setPassword("s63a");
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare(queueName, false, false, false, null);
+        channel.queueDeclare(queueName, false, true, false, null);
 
         System.out.println("Waiting for messages on queue: " + queueName);
         handler = new JMSHandler();
