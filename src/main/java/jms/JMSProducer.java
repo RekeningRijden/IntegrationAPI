@@ -20,22 +20,29 @@ public class JMSProducer {
     public JMSProducer(HashMap<String, String> routingKeys, String exchangeName, String exchangeType, String queueSuffix) throws IOException, TimeoutException {
 
         this.routingKeys = routingKeys;
-        this.exchangeName =  exchangeName;
+        this.exchangeName = exchangeName;
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("192.168.99.100");
         factory.setPort(5672);
-        factory.setUsername("test");
-        factory.setPassword("test");
+
+        //Lokaal in docker
+//        factory.setHost("192.168.99.100");
+//        factory.setUsername("test");
+//        factory.setPassword("test");
+
+        //Productie
+        factory.setHost("rabbitmq.seclab.marijn.ws");
+        factory.setUsername("portugal");
+        factory.setPassword("s63a");
         Connection connection = factory.newConnection();
         channel = connection.createChannel();
 
         channel.exchangeDeclare(exchangeName, exchangeType);
 
         //Setup routing for RabbitMQ
-        for(HashMap.Entry<String, String> entry : routingKeys.entrySet()) {
+        for (HashMap.Entry<String, String> entry : routingKeys.entrySet()) {
             String queue = entry.getKey() + "_" + queueSuffix;
-            channel.queueDeclare(queue , false, false, false, null);
+            channel.queueDeclare(queue, false, false, false, null);
             channel.queueBind(queue, exchangeName, entry.getValue());
         }
     }
