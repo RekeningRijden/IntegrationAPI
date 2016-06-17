@@ -1,2 +1,6 @@
 /IntegrationSystemApi/target/
 /target/
+/.idea/
+/IntegrationSystemApi/.idea/
+*.imp
+.DS_Store
