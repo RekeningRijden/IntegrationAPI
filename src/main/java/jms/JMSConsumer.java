@@ -16,6 +16,13 @@ public class JMSConsumer {
 
     private Connection connection;
 
+    /**
+     * Creates a connection and declares the queue and listens for message on that queue
+     * @param queueName The name of the queue
+     * @param producer The producer to forward the message to
+     * @throws IOException
+     * @throws TimeoutException
+     */
     public JMSConsumer(final String queueName, final JMSProducer producer) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         //Lokaal in docker
@@ -47,6 +54,11 @@ public class JMSConsumer {
         channel.basicConsume(queueName, true, consumer);
     }
 
+    /**
+     * Closes the open connections
+     * @throws IOException
+     * @throws TimeoutException
+     */
     public void closeConnection() throws IOException, TimeoutException {
         channel.close();
         connection.close();

@@ -3,6 +3,7 @@ package jms;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import util.RoutingKeyFilter;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,13 +15,21 @@ import java.util.concurrent.TimeoutException;
 public class JMSProducer {
 
     private Channel channel;
-    Connection connection;
+    private Connection connection;
     private String exchangeName;
-    private HashMap<String, String> routingKeys;
+    private String exchangeType;
 
+    /**
+     * Creates a connection and declares the queue(s) and exchange and binds them
+     * @param routingKeys The routingKeys for the routing
+     * @param exchangeName The name of the exchange to send the message to
+     * @param exchangeType The exchange type (e.g. direct, fanout, topic, etc.)
+     * @param queueSuffix The suffix of the name of the queue
+     * @throws IOException
+     * @throws TimeoutException
+     */
     public JMSProducer(HashMap<String, String> routingKeys, String exchangeName, String exchangeType, String queueSuffix) throws IOException, TimeoutException {
-
-        this.routingKeys = routingKeys;
+        this.exchangeType = exchangeType;
         this.exchangeName = exchangeName;
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -48,18 +57,33 @@ public class JMSProducer {
         }
     }
 
+    /**
+     * Closes the connections
+     * @throws IOException
+     * @throws TimeoutException
+     */
     public void closeConnection() throws IOException, TimeoutException {
         channel.close();
         connection.close();
     }
 
-    public void sendMessage(String messagebody) throws Exception {
-        if (channel != null) {
-            String message = "This is a message for testing routing";
-            channel.basicPublish(exchangeName, messagebody, null, message.getBytes());
-            System.out.println("Sent message: " + message + ". With routing key: " + messagebody);
-        } else {
-            throw new Exception("channel is null");
+    /**
+     * Gets the routing key based on the param country and sends it to the exchange with the routing key
+     * @param messagebody The body of the message to be sent
+     * @param country The country for the message to be to send to
+     */
+    public void sendMessage(String messagebody, String country) {
+        try {
+            String routingKey = "no_key";
+            if(exchangeType.equals("direct")) {
+                RoutingKeyFilter routingKeyFilter = new RoutingKeyFilter();
+                routingKey = routingKeyFilter.getRoutingKeyForCountry(country);
+            }
+
+            channel.basicPublish(exchangeName, routingKey, null, messagebody.getBytes());
+            System.out.println("Sent message: " + messagebody + ", to exchange: "+ exchangeName + ", with routing key: " + routingKey + " ( " + exchangeType + ")");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

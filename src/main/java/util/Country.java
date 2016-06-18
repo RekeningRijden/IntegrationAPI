@@ -2,9 +2,15 @@ package util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Eric on 17-06-16.
+ */
+
+/**
+ * Class used for parsing the json to an object
  */
 public class Country {
 
@@ -75,18 +81,35 @@ public class Country {
 
     //</editor-fold>
 
+    /**
+     * Combines all country names in different languages in a single list
+     */
     public void organize() {
-        this.countryNames = new ArrayList<>();
-        this.countryNames.add(nativeName.toLowerCase());
-        this.countryNames.add(name.toLowerCase());
+        List<String> tempCountryNames = new ArrayList<>();
+        tempCountryNames.add(nativeName.toLowerCase());
+        tempCountryNames.add(name.toLowerCase());
+
         for(String altSpelling : altSpellings) {
-            this.countryNames.add(altSpelling.toLowerCase());
+            tempCountryNames.add(altSpelling.toLowerCase());
         }
-        this.countryNames.add(translations.getDe().toLowerCase());
-        this.countryNames.add(translations.getEs().toLowerCase());
-        this.countryNames.add(translations.getFr().toLowerCase());
-        this.countryNames.add(translations.getJa().toLowerCase());
-        this.countryNames.add(translations.getIt().toLowerCase());
+
+        if(translations.getDe() != null) tempCountryNames.add(translations.getDe().toLowerCase());
+        if(translations.getEs() != null) tempCountryNames.add(translations.getEs().toLowerCase());
+        if(translations.getFr() != null) tempCountryNames.add(translations.getFr().toLowerCase());
+        if(translations.getJa() != null) tempCountryNames.add(translations.getJa().toLowerCase());
+        if(translations.getIt() != null) tempCountryNames.add(translations.getIt().toLowerCase());
+        cleanup(tempCountryNames);
+    }
+
+    /**
+     * Removes all duplicates
+     * @param tempCountryNames List with country names in different languages
+     */
+    private void cleanup(List<String> tempCountryNames) {
+        this.countryNames = new ArrayList<>();
+        Set<String> tempSet = new TreeSet<>();
+        tempSet.addAll(tempCountryNames);
+        this.countryNames.addAll(tempSet);
     }
 }
 
@@ -99,6 +122,7 @@ class Translation {
 
     public Translation(){}
 
+    //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
     public String getDe() {
         return de;
     }
@@ -138,4 +162,5 @@ class Translation {
     public void setIt(String it) {
         this.it = it;
     }
+    //</editor-fold>
 }
