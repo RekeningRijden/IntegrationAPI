@@ -12,6 +12,10 @@ public class JMSConsumer {
 
     private JMSHandler handler;
 
+    private Channel channel;
+
+    private Connection connection;
+
     public JMSConsumer(final String queueName, final JMSProducer producer) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         //Lokaal in docker
@@ -24,8 +28,8 @@ public class JMSConsumer {
         factory.setUsername("portugal");
         factory.setPassword("s63a");
 
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        connection = factory.newConnection();
+        channel = connection.createChannel();
 
         channel.queueDeclare(queueName, true, false, false, null);
 
@@ -41,5 +45,10 @@ public class JMSConsumer {
             }
         };
         channel.basicConsume(queueName, true, consumer);
+    }
+
+    public void closeConnection() throws IOException, TimeoutException {
+        channel.close();
+        connection.close();
     }
 }

@@ -1,32 +1,44 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Eric on 17-06-16.
  */
 public class Country {
 
-    private String cca2;
+    private String name;
 
-    private Name name;
+    private List<String> altSpellings;
 
     private Translation translations;
 
-    public Country() {}
+    private String nativeName;
 
-    public String getCca2() {
-        return cca2;
+    private String alpha2Code;
+
+    private List<String> countryNames;
+
+    public Country(){
+        altSpellings = new ArrayList<>();
     }
 
-    public void setCca2(String cca2) {
-        this.cca2 = cca2;
-    }
-
-    public Name getName() {
+    //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
+    public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public List<String> getAltSpellings() {
+        return altSpellings;
+    }
+
+    public void setAltSpellings(List<String> altSpellings) {
+        this.altSpellings = altSpellings;
     }
 
     public Translation getTranslations() {
@@ -36,134 +48,94 @@ public class Country {
     public void setTranslations(Translation translations) {
         this.translations = translations;
     }
-}
 
-class Name {
-    private String common;
-
-    public Name() {}
-
-    public String getCommon() {
-        return common;
+    public String getNativeName() {
+        return nativeName;
     }
 
-    public void setCommon(String common) {
-        this.common = common;
+    public void setNativeName(String nativeName) {
+        this.nativeName = nativeName;
+    }
+
+    public String getAlpha2Code() {
+        return alpha2Code;
+    }
+
+    public void setAlpha2Code(String alpha2Code) {
+        this.alpha2Code = alpha2Code;
+    }
+
+    public List<String> getCountryNames() {
+        return countryNames;
+    }
+
+    public void setCountryNames(List<String> countryNames) {
+        this.countryNames = countryNames;
+    }
+
+    //</editor-fold>
+
+    public void organize() {
+        this.countryNames = new ArrayList<>();
+        this.countryNames.add(nativeName.toLowerCase());
+        this.countryNames.add(name.toLowerCase());
+        for(String altSpelling : altSpellings) {
+            this.countryNames.add(altSpelling.toLowerCase());
+        }
+        this.countryNames.add(translations.getDe().toLowerCase());
+        this.countryNames.add(translations.getEs().toLowerCase());
+        this.countryNames.add(translations.getFr().toLowerCase());
+        this.countryNames.add(translations.getJa().toLowerCase());
+        this.countryNames.add(translations.getIt().toLowerCase());
     }
 }
 
 class Translation {
-    private  Lang deu;
-    private  Lang fra;
-    private  Lang hrv;
-    private  Lang ita;
-    private  Lang jpn;
-    private  Lang nld;
-    private  Lang por;
-    private  Lang rus;
-    private  Lang spa;
-    private  Lang fin;
-    private  Lang zho;
+    private String de;
+    private String es;
+    private String fr;
+    private String ja;
+    private String it;
 
     public Translation(){}
 
-    public Lang getDeu() {
-        return deu;
+    public String getDe() {
+        return de;
     }
 
-    public void setDeu(Lang deu) {
-        this.deu = deu;
+    public void setDe(String de) {
+        this.de = de;
     }
 
-    public Lang getFra() {
-        return fra;
+    public String getEs() {
+        return es;
     }
 
-    public void setFra(Lang fra) {
-        this.fra = fra;
+    public void setEs(String es) {
+        this.es = es;
     }
 
-    public Lang getHrv() {
-        return hrv;
+    public String getFr() {
+        return fr;
     }
 
-    public void setHrv(Lang hrv) {
-        this.hrv = hrv;
+    public void setFr(String fr) {
+        this.fr = fr;
     }
 
-    public Lang getIta() {
-        return ita;
+    public String getJa() {
+        return ja;
     }
 
-    public void setIta(Lang ita) {
-        this.ita = ita;
+    public void setJa(String ja) {
+        this.ja = ja;
     }
 
-    public Lang getJpn() {
-        return jpn;
+    public String getIt() {
+        return it;
     }
 
-    public void setJpn(Lang jpn) {
-        this.jpn = jpn;
-    }
-
-    public Lang getNld() {
-        return nld;
-    }
-
-    public void setNld(Lang nld) {
-        this.nld = nld;
-    }
-
-    public Lang getPor() {
-        return por;
-    }
-
-    public void setPor(Lang por) {
-        this.por = por;
-    }
-
-    public Lang getRus() {
-        return rus;
-    }
-
-    public void setRus(Lang rus) {
-        this.rus = rus;
-    }
-
-    public Lang getSpa() {
-        return spa;
-    }
-
-    public void setSpa(Lang spa) {
-        this.spa = spa;
-    }
-
-    public Lang getFin() {
-        return fin;
-    }
-
-    public void setFin(Lang fin) {
-        this.fin = fin;
-    }
-
-    public Lang getZho() {
-        return zho;
-    }
-
-    public void setZho(Lang zho) {
-        this.zho = zho;
-    }
-}
-
-class Lang {
-    private String common;
-
-    public String getCommon() {
-        return common;
-    }
-
-    public void setCommon(String common) {
-        this.common = common;
+    public void setIt(String it) {
+        this.it = it;
     }
 }

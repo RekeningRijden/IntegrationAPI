@@ -1,5 +1,7 @@
 package jms;
 
+import javax.inject.Inject;
+
 /**
  * Created by Eric on 17-06-16.
  */

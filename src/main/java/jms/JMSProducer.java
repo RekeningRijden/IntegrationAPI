@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 public class JMSProducer {
 
     private Channel channel;
+    Connection connection;
     private String exchangeName;
     private HashMap<String, String> routingKeys;
 
@@ -34,7 +35,7 @@ public class JMSProducer {
         factory.setHost("rabbitmq.seclab.marijn.ws");
         factory.setUsername("portugal");
         factory.setPassword("s63a");
-        Connection connection = factory.newConnection();
+        connection = factory.newConnection();
         channel = connection.createChannel();
 
         channel.exchangeDeclare(exchangeName, exchangeType);
@@ -45,6 +46,11 @@ public class JMSProducer {
             channel.queueDeclare(queue, true, false, false, null);
             channel.queueBind(queue, exchangeName, entry.getValue());
         }
+    }
+
+    public void closeConnection() throws IOException, TimeoutException {
+        channel.close();
+        connection.close();
     }
 
     public void sendMessage(String messagebody) throws Exception {
