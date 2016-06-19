@@ -40,7 +40,7 @@ public class JMSInit {
     @PostConstruct
     public void init() {
 
-        if(apiKeyService.getAll().isEmpty()){
+        if (apiKeyService.getAll().isEmpty()) {
             apiKeyService.create(new ApiKey("Belgie", "118c7fe4b4fa71b9d4a37f39666411f2", "BE"));
             apiKeyService.create(new ApiKey("Nederland", "4846339f0926558a03ae223e9635a5e6", "NL"));
             apiKeyService.create(new ApiKey("Luxemburg", "860bbaefa1c880cfbf8f33d5799a718a", "LU"));
@@ -68,7 +68,7 @@ public class JMSInit {
         queueProducerMapping.put("portugal_foreign_invoice", "invoice");
 
         try {
-            for(Map.Entry<String, String> entry : queueProducerMapping.entrySet()) {
+            for (Map.Entry<String, String> entry : queueProducerMapping.entrySet()) {
                 String queueNameSuffix = entry.getValue();
                 String exchangeName = entry.getValue() + "_exchange";
                 String queueName = entry.getKey();
@@ -76,7 +76,7 @@ public class JMSInit {
                 String EXCHANGE_TYPE = EXCHANGE_TYPE_DIRECT;
 
                 //Only car_stolen_exchange is of type fanout
-                if(exchangeName.equals("car_stolen_exchange")) {
+                if (exchangeName.equals("car_stolen_exchange")) {
                     EXCHANGE_TYPE = EXCHANGE_TYPE_FANOUT;
                 }
 
@@ -96,7 +96,7 @@ public class JMSInit {
      */
     @PreDestroy
     public void destroy() {
-        for(JMSConsumer consumer : consumers) {
+        for (JMSConsumer consumer : consumers) {
             try {
                 consumer.closeConnection();
             } catch (TimeoutException e) {
@@ -106,7 +106,7 @@ public class JMSInit {
             }
         }
 
-        for(JMSProducer producer : producers) {
+        for (JMSProducer producer : producers) {
             try {
                 producer.closeConnection();
             } catch (TimeoutException e) {

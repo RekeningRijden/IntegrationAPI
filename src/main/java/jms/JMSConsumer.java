@@ -18,8 +18,9 @@ public class JMSConsumer {
 
     /**
      * Creates a connection and declares the queue and listens for message on that queue
+     *
      * @param queueName The name of the queue
-     * @param producer The producer to forward the message to
+     * @param producer  The producer to forward the message to
      * @throws IOException
      * @throws TimeoutException
      */
@@ -56,6 +57,7 @@ public class JMSConsumer {
 
     /**
      * Closes the open connections
+     *
      * @throws IOException
      * @throws TimeoutException
      */

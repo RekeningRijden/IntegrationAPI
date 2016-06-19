@@ -3,8 +3,6 @@ package jms;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javax.inject.Inject;
-
 /**
  * Created by Eric on 17-06-16.
  */
@@ -15,9 +13,10 @@ public class JMSHandler {
 
     /**
      * Transforms and routes the messages if needed
-     * @param message The received message via the consumer
+     *
+     * @param message       The received message via the consumer
      * @param fromQueueName The name of the queue where the message came from
-     * @param producer The producer that sends the message to the right queue
+     * @param producer      The producer that sends the message to the right queue
      */
     public void handleMessage(String message, String fromQueueName, JMSProducer producer) {
         System.out.println("Message: " + message + ", on queue: " + fromQueueName);
