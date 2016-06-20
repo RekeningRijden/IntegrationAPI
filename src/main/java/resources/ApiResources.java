@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.ejb.EJB;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,9 +19,12 @@ import javax.inject.Named;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import jms.JMSInit;
+import jms.JMSProducer;
 import request.DeleteStolenRequest;
 import request.MovementsRequest;
 import request.StolenRequest;
+import send.SendMovements;
 import service.ApiKeyService;
 import service.CarService;
 import util.PositionHelper;
@@ -33,6 +37,8 @@ public class ApiResources {
     private CarService carService;
     @Inject
     private ApiKeyService apiKeyService;
+    @EJB
+    private JMSInit jmsInit;
 
     /**
      * update a car
@@ -48,12 +54,16 @@ public class ApiResources {
     public void updateCar(@QueryParam("api_key") String apiKey, MovementsRequest movementsRequest) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
             if (movementsRequest.getCarIdentifier() != null && !movementsRequest.getCarIdentifier().equals("")) {
+                Car car = null;
                 if (carService.getCarByIdentifier(movementsRequest.getCarIdentifier()) != null) {
-                    Car c = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
-                    carService.update(carService.movementRequestToCar(movementsRequest, c));
+                    car = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
+                    carService.update(carService.movementRequestToCar(movementsRequest, car));
                 } else {
-                    carService.create(carService.movementRequestToCar(movementsRequest));
+                    car = carService.create(carService.movementRequestToCar(movementsRequest));
                 }
+                JMSProducer producer = jmsInit.findProducer("portugal_foreign_movement");
+                SendMovements sendMovements = new SendMovements();
+                sendMovements.send(producer, car);
                 throw new WebApplicationException(Response.Status.OK);
             } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);

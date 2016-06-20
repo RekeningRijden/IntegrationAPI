@@ -20,7 +20,6 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by Eric on 17-06-16.
  */
-
 /**
  * Class for setting up everything needed for this webapp
  */
@@ -86,13 +85,26 @@ public class JMSInit {
                 consumers.add(consumer);
                 producers.add(producer);
             }
+            JMSProducer producer = new JMSProducer(EXCHANGE_TYPE_DIRECT, "portugal_foreign_movement");
+            producers.add(producer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public JMSProducer findProducer(String name) {
+        JMSProducer producer = null;
+        for(JMSProducer p : producers){
+            if(p.getQueue().equals(name)){
+                producer = p;
+            }
+        }
+        return producer;
+    }
+
     /**
-     * Closes all open connections when the server shuts down or the app gets undeployed
+     * Closes all open connections when the server shuts down or the app gets
+     * undeployed
      */
     @PreDestroy
     public void destroy() {
