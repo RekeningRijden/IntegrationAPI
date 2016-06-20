@@ -66,6 +66,9 @@ public class JMSInit {
         queueProducerMapping.put("portugal_car_stolen", "car_stolen");
         queueProducerMapping.put("portugal_foreign_invoice", "invoice");
 
+        //The producers to communnicate to our other systems
+        String[] producerQueues = {"portugal_foreign_movement"};
+
         try {
             for (Map.Entry<String, String> entry : queueProducerMapping.entrySet()) {
                 String queueNameSuffix = entry.getValue();
@@ -85,8 +88,11 @@ public class JMSInit {
                 consumers.add(consumer);
                 producers.add(producer);
             }
-            JMSProducer producer = new JMSProducer(EXCHANGE_TYPE_DIRECT, "portugal_foreign_movement");
-            producers.add(producer);
+
+            for (String queue : producerQueues) {
+                JMSProducer producer = new JMSProducer(EXCHANGE_TYPE_DIRECT, queue);
+                producers.add(producer);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,8 +100,8 @@ public class JMSInit {
 
     public JMSProducer findProducer(String name) {
         JMSProducer producer = null;
-        for(JMSProducer p : producers){
-            if(p.getQueue().equals(name)){
+        for (JMSProducer p : producers) {
+            if (p.getQueue().equals(name)) {
                 producer = p;
             }
         }

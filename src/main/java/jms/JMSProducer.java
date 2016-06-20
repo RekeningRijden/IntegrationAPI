@@ -23,7 +23,7 @@ public class JMSProducer {
     public JMSProducer(String exchangeType, String queue) throws IOException, TimeoutException {
         this.exchangeType = exchangeType;
         this.queue = queue;
-        this.exchangeName = queue;
+        this.exchangeName = queue + "_exchange";
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setPort(5672);
