@@ -126,8 +126,8 @@ public class ApiResources {
      * @param apiKey key for access
      * @param deleteStolenRequest the request to set a car unstolen
      */
-    @DELETE
-    @Path("/stolen")
+    @POST
+    @Path("/stolen/_delete")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public void setCarAsStolen(@QueryParam("api_key") String apiKey, DeleteStolenRequest deleteStolenRequest) {
