@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 
 import java.io.Serializable;
 import request.MovementsRequest;
+import request.StolenRequest;
 
 /**
  * @author Sam
@@ -43,6 +44,16 @@ public class CarService extends CarDao implements Serializable {
         car.getDriverAddress().setStreetNr(movementsRequest.getDriverAddress().getStreetNr());
         car.getDriverAddress().setZipcode(movementsRequest.getDriverAddress().getZipcode());
         car.setPositions(movementsRequest.getPositions());
+        return car;
+    }
+    
+    public Car stolenRequestToCar(StolenRequest stolenRequest, long cartrackerId) {
+        Car car = new Car();
+        car.setCartrackerId(cartrackerId);
+        car.setStolen(true);
+        car.setCarIdentifier(stolenRequest.getCarIdentifier());
+        car.setLicencePlate(stolenRequest.getLicencePlate());
+        car.getPositions().add(stolenRequest.getLastPosition());
         return car;
     }
 }

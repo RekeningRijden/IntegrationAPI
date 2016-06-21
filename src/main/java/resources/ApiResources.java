@@ -57,7 +57,7 @@ public class ApiResources {
                     car = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
                     carService.update(carService.movementRequestToCar(movementsRequest, car));
                 } else {
-                    long cartrackerId = carService.min() -1l;
+                    long cartrackerId = carService.min() - 1l;
                     car = carService.create(carService.movementRequestToCar(movementsRequest, cartrackerId));
                 }
                 JMSProducer producer = jmsInit.findExchange("portugal_movement_exchange");
@@ -106,14 +106,15 @@ public class ApiResources {
             Car car = carService.getCarByIdentifier(stolenRequest.getCarIdentifier());
             if (car != null) {
                 car.setStolen(true);
-                carService.update(car);
-                JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
-                Gson gson = new Gson();
-                producer.sendMessage(gson.toJson(car.carToPoliceCar(stolenRequest.getLastPosition())), "portugal");
-                throw new WebApplicationException(Response.Status.OK);
+                car = carService.update(car);
             } else {
-                throw new WebApplicationException(Response.Status.CONFLICT);
+                long cartrackerId = carService.min() - 1l;
+                car = carService.create(carService.stolenRequestToCar(stolenRequest, cartrackerId));
             }
+            JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
+            Gson gson = new Gson();
+            producer.sendMessage(gson.toJson(car.carToPoliceCar(stolenRequest.getLastPosition())), "portugal");
+            throw new WebApplicationException(Response.Status.OK);
         } else {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
