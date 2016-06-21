@@ -6,6 +6,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -51,6 +52,7 @@ public class Car implements Serializable {
         driver = new Driver();
         driverAddress = new DriverAddress();
         stolen = false;
+        positions = new ArrayList<>();
     }
 
     public Long getId() {

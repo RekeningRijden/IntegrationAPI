@@ -53,7 +53,7 @@ public class CarService extends CarDao implements Serializable {
         car.setStolen(true);
         car.setCarIdentifier(stolenRequest.getCarIdentifier());
         car.setLicencePlate(stolenRequest.getLicencePlate());
-        car.getPositions().add(stolenRequest.getLastPosition());
+        car.setLastPosition(stolenRequest.getLastPosition());
         return car;
     }
 }
