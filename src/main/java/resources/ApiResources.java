@@ -111,7 +111,7 @@ public class ApiResources {
                 long cartrackerId = carService.min() - 1l;
                 car = carService.create(carService.stolenRequestToCar(stolenRequest, cartrackerId));
             }
-            JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
+            JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen_exchange");
             Gson gson = new Gson();
             producer.sendMessage(gson.toJson(car.carToPoliceCar(stolenRequest.getLastPosition())), "portugal");
             throw new WebApplicationException(Response.Status.OK);
@@ -136,7 +136,7 @@ public class ApiResources {
             if (car != null) {
                 car.setStolen(false);
                 carService.update(car);
-                JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
+                JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen_exchange");
                 Gson gson = new Gson();
                 producer.sendMessage(gson.toJson(car.carToPoliceCar()), "portugal");
                 throw new WebApplicationException(Response.Status.OK);
