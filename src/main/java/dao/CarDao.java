@@ -6,6 +6,7 @@
 package dao;
 
 import domain.Car;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 
@@ -36,5 +37,11 @@ public abstract class CarDao extends AbstractDao<Car> {
                 .setParameter("licencePlate", licencePlate);
 
         return oneResult(q);
+    }
+    
+    public int min() {
+        Query query = getEntityManager().createNamedQuery(getEntityClass().getSimpleName() + ".min", getEntityClass());
+        
+        return query.getSingleResult() == null ? 0 : (int) (long) query.getSingleResult();
     }
 }

@@ -1,11 +1,10 @@
 package resources;
 
+import com.google.gson.Gson;
 import domain.Car;
 import domain.Position;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import javax.ejb.EJB;
 
 import javax.ws.rs.Consumes;
@@ -24,7 +23,6 @@ import jms.JMSProducer;
 import request.DeleteStolenRequest;
 import request.MovementsRequest;
 import request.StolenRequest;
-import send.SendMovements;
 import service.ApiKeyService;
 import service.CarService;
 import util.PositionHelper;
@@ -59,11 +57,12 @@ public class ApiResources {
                     car = carService.getCarByIdentifier(movementsRequest.getCarIdentifier());
                     carService.update(carService.movementRequestToCar(movementsRequest, car));
                 } else {
-                    car = carService.create(carService.movementRequestToCar(movementsRequest));
+                    long cartrackerId = carService.min() -1l;
+                    car = carService.create(carService.movementRequestToCar(movementsRequest, cartrackerId));
                 }
-                JMSProducer producer = jmsInit.findProducer("portugal_foreign_movement");
-                SendMovements sendMovements = new SendMovements();
-                sendMovements.send(producer, car);
+                JMSProducer producer = jmsInit.findExchange("portugal_movement_exchange");
+                Gson gson = new Gson();
+                producer.sendMessage(gson.toJson(car.carToAdministrationCar(movementsRequest.getPositions())), "portugal");
                 throw new WebApplicationException(Response.Status.OK);
             } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);
@@ -84,7 +83,6 @@ public class ApiResources {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Position> getPositions(@QueryParam("api_key") String apiKey) {
         if (apiKeyService.getApiKeyByKey(apiKey) != null) {
-            //TODO
             List<Position> positions = new ArrayList<>();
             positions.addAll(PositionHelper.createPositions());
             return positions;
@@ -109,6 +107,9 @@ public class ApiResources {
             if (car != null) {
                 car.setStolen(true);
                 carService.update(car);
+                JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
+                Gson gson = new Gson();
+                producer.sendMessage(gson.toJson(car.carToPoliceCar(stolenRequest.getLastPosition())), "portugal");
                 throw new WebApplicationException(Response.Status.OK);
             } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);
@@ -134,6 +135,9 @@ public class ApiResources {
             if (car != null) {
                 car.setStolen(false);
                 carService.update(car);
+                JMSProducer producer = jmsInit.findExchange("portugal_foreign_car_stolen");
+                Gson gson = new Gson();
+                producer.sendMessage(gson.toJson(car.carToPoliceCar()), "portugal");
                 throw new WebApplicationException(Response.Status.OK);
             } else {
                 throw new WebApplicationException(Response.Status.CONFLICT);

@@ -18,8 +18,9 @@ public class CarService extends CarDao implements Serializable {
         return Car.class;
     }
 
-    public Car movementRequestToCar(MovementsRequest movementsRequest) {
+    public Car movementRequestToCar(MovementsRequest movementsRequest, long cartrackerId) {
         Car car = new Car();
+        car.setCartrackerId(cartrackerId);
         car.setCarIdentifier(movementsRequest.getCarIdentifier());
         car.setLicencePlate(movementsRequest.getLicencePlate());
         car.getDriver().setFirstName(movementsRequest.getDriver().getFirstName());

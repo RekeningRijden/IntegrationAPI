@@ -18,12 +18,10 @@ public class JMSProducer {
     private Connection connection;
     private String exchangeName;
     private String exchangeType;
-    private String queue;
 
-    public JMSProducer(String exchangeType, String queue) throws IOException, TimeoutException {
+    public JMSProducer(String exchangeType, String[] queues, String exchangeName) throws IOException, TimeoutException {
         this.exchangeType = exchangeType;
-        this.queue = queue;
-        this.exchangeName = queue + "_exchange";
+        this.exchangeName = exchangeName;
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setPort(5672);
@@ -39,9 +37,11 @@ public class JMSProducer {
         connection = factory.newConnection();
         channel = connection.createChannel();
 
-        channel.exchangeDeclare(exchangeName, exchangeType);
-        channel.queueDeclare(queue, true, false, false, null);
-        channel.queueBind(queue, exchangeName, "PT");
+        for (String queue : queues) {
+            channel.exchangeDeclare(exchangeName, exchangeType);
+            channel.queueDeclare(queue, true, false, false, null);
+            channel.queueBind(queue, exchangeName, "PT");
+        }
     }
 
     /**
@@ -58,15 +58,14 @@ public class JMSProducer {
     public JMSProducer(HashMap<String, String> routingKeys, String exchangeName, String exchangeType, String queueSuffix) throws IOException, TimeoutException {
         this.exchangeType = exchangeType;
         this.exchangeName = exchangeName;
-        this.queue = queueSuffix;
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setPort(5672);
 
         //Lokaal in docker
-//        factory.setHost("192.168.99.100");
-//        factory.setUsername("test");
-//        factory.setPassword("test");
+        //factory.setHost("192.168.99.100");
+        //factory.setUsername("test");
+        //factory.setPassword("test");
         //Productie
         factory.setHost("rabbitmq.seclab.marijn.ws");
         factory.setUsername("portugal");
@@ -117,7 +116,7 @@ public class JMSProducer {
         }
     }
 
-    public String getQueue() {
-        return queue;
+    public String getExchangeName() {
+        return exchangeName;
     }
 }
