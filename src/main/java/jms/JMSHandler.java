@@ -6,10 +6,12 @@ import org.json.simple.parser.JSONParser;
 import wrappers.InvoiceWrapper;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Eric on 17-06-16.
@@ -65,12 +67,14 @@ public class JMSHandler {
 
             producer.sendMessage(message, country);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (ParseException ex) {
+            Logger.getLogger(JMSHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.text.ParseException ex) {
+            Logger.getLogger(JMSHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public String getFormatedDate(String dateString) throws ParseException {
+    public String getFormatedDate(String dateString) throws java.text.ParseException {
         Date date = sdf.parse(dateString);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
