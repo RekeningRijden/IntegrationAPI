@@ -8,6 +8,8 @@ import util.RoutingKeyFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Eric on 17-06-16.
@@ -112,7 +114,7 @@ public class JMSProducer {
             channel.basicPublish(exchangeName, routingKey, null, messagebody.getBytes());
             System.out.println("Sent message: " + messagebody + ", to exchange: " + exchangeName + ", with routing key: " + routingKey + " ( " + exchangeType + ")");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(JMSProducer.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 

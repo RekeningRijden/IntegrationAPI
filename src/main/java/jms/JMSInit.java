@@ -2,7 +2,6 @@ package jms;
 
 import domain.ApiKey;
 import service.ApiKeyService;
-import util.RoutingKeyFilter;
 
 import javax.annotation.PostConstruct;
 
@@ -16,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Eric on 17-06-16.
@@ -90,7 +91,7 @@ public class JMSInit {
             }
 
             for (String queue : producerQueues) {
-                JMSProducer producer = null;
+                JMSProducer producer;
                 String exchangeName = queue + "_exchange";
                 if (queue.equals("portugal_movement")) {
                     String[] queues = {"portugal_foreign_movement_administration", "portugal_foreign_movement_movement"};
@@ -101,8 +102,8 @@ public class JMSInit {
                 }
                 producers.add(producer);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | TimeoutException e) {
+            Logger.getLogger(JMSInit.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -125,20 +126,16 @@ public class JMSInit {
         for (JMSConsumer consumer : consumers) {
             try {
                 consumer.closeConnection();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (TimeoutException | IOException e) {
+                Logger.getLogger(JMSInit.class.getName()).log(Level.SEVERE, null, e);
             }
         }
 
         for (JMSProducer producer : producers) {
             try {
                 producer.closeConnection();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (TimeoutException | IOException e) {
+               Logger.getLogger(JMSInit.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }

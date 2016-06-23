@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Eric on 18-06-16.
@@ -45,7 +47,7 @@ public class CountryObtainer {
 
 
         } catch (CommunicationException | IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(CountryObtainer.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
