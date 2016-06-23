@@ -1,7 +1,10 @@
 package jms;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Eric on 17-06-16.
@@ -41,8 +44,8 @@ public class JMSHandler {
 
             producer.sendMessage(message, country);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch (ParseException ex) {
+            Logger.getLogger(JMSHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 }
