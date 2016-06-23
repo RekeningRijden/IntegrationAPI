@@ -27,9 +27,9 @@ public class JMSConsumer {
     public JMSConsumer(final String queueName, final JMSProducer producer) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         //Lokaal in docker
-        //factory.setHost("192.168.99.100");
-        //factory.setUsername("test");
-        //factory.setPassword("test");
+//        factory.setHost("192.168.99.100");
+//        factory.setUsername("test");
+//        factory.setPassword("test");
 
         //Productie
         factory.setHost("rabbitmq.seclab.marijn.ws");

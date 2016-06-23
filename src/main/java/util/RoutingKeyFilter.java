@@ -20,8 +20,9 @@ public class RoutingKeyFilter {
      * @return The alpha2Code based on the countryName or a String if no alpha2Code is found
      */
     public String getRoutingKeyForCountry(String countryName) {
+        String countryNameLowercase = countryName.toLowerCase();
         for(Map.Entry<String, List<String>> entry : CountryObtainer.getInstance().getIndexedCountries().entrySet()) {
-            if (entry.getValue().contains(countryName)) {
+            if (entry.getValue().contains(countryNameLowercase)) {
                 return entry.getKey();
             }
         }
