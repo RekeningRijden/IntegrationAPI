@@ -29,13 +29,13 @@ public class JMSProducer {
         factory.setPort(5672);
 
         //Lokaal in docker
-        factory.setHost("192.168.99.100");
-        factory.setUsername("test");
-        factory.setPassword("test");
+        //factory.setHost("192.168.99.100");
+        //factory.setUsername("test");
+        //factory.setPassword("test");
         //Productie
-//        factory.setHost("rabbitmq.seclab.marijn.ws");
-//        factory.setUsername("portugal");
-//        factory.setPassword("s63a");
+        factory.setHost("rabbitmq.seclab.marijn.ws");
+        factory.setUsername("portugal");
+        factory.setPassword("s63a");
         connection = factory.newConnection();
         channel = connection.createChannel();
 
