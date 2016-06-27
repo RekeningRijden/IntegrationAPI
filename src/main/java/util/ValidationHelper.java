@@ -5,6 +5,9 @@
  */
 package util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Marijn
@@ -15,6 +18,7 @@ public class ValidationHelper {
         try {
             Integer.parseInt(s);
         } catch (NumberFormatException | NullPointerException e) {
+            Logger.getLogger(ValidationHelper.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
         // only got here if we didn't return false
